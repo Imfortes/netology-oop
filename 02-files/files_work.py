@@ -84,7 +84,20 @@ class File:
             
     @staticmethod
     def merge_files(file_names):
-        sorted_file_data = sorted(((name, len(open(name, encoding='utf-8').readlines())) for name in file_names), key=lambda x: x[1])
+        # try:
+        #     sorted_file_data = sorted(((name, len(open(name, encoding='utf-8').readlines())) for name in file_names), key=lambda x: x[1])
+        # except:
+        #     print('Произошла ошибка')
+        try:
+            sorted_file_data = sorted(
+                ((name, sum(1 for _ in open(name, encoding='utf-8'))) for name in file_names),
+                key=lambda x: x[1]
+            )
+            return sorted_file_data
+        except FileNotFoundError as e:
+            print(f'Ошибка: файл не найден - {e}')
+        except Exception as e:
+            print(f'Произошла ошибка: {e}')
 
         with open('./02-files/result_2.txt', 'w', encoding='utf-8') as result_file:
             for file_name, line_count in sorted_file_data:
